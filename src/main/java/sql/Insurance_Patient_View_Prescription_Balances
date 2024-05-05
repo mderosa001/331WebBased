@@ -1,0 +1,37 @@
+
+-- Create a view to retrieve information about patients covered by the insurance company and their outstanding payments
+CREATE OR REPLACE VIEW Insurance_Company_Covered_Patients AS
+SELECT      P.PATIENT_ID,
+            P.LAST || ', ' || P.FIRST AS PATIENT_NAME,
+            P.INSURANCE_ID,
+            SUM(PB.InsuranceBalance) AS AMOUNT_OWED
+FROM        HealthCareManagement_PATIENT P
+            JOIN    HealthCareManagement_PRESCRIPTIONBALANCE PB ON P.PATIENT_ID = PB.PATIENT_ID
+            JOIN    HealthCareManagement_PRESCRIPTION PR ON P.PATIENT_ID = PR.PATIENT_ID
+GROUP BY    P.PATIENT_ID, P.LAST, P.FIRST, P.INSURANCE_ID;
+
+-- Create a view to retrieve information about patients covered by the insurance company and their outstanding payments
+CREATE OR REPLACE VIEW Patient_Prescription_Balance AS
+SELECT      P.PATIENT_ID,
+            PR.PRESCRIPTION_ID,
+            PR.DATE_ISSUED,
+            PR.PRESCRIPTION_NAME,
+            SUM(PB.PatientBalance) AS AMOUNT_OWED
+FROM        HealthCareManagement_PATIENT P
+            JOIN    HealthCareManagement_PRESCRIPTIONBALANCE PB ON P.PATIENT_ID = PB.PATIENT_ID
+            JOIN    HealthCareManagement_PRESCRIPTION PR ON P.PATIENT_ID = PR.PATIENT_ID
+GROUP BY    P.PATIENT_ID, PR.PRESCRIPTION_ID, PR.DATE_ISSUED, PR.PRESCRIPTION_NAME;
+
+
+
+SELECT * FROM Patient_Prescription_Balance WHERE PATIENT_ID = 'PAT001';
+
+
+
+
+
+
+
+
+
+
